@@ -17,8 +17,10 @@ Quando si clicca su una bomba e finisce la partita, il software scopre tutte le 
 // inizializzo elementi HTML
 const buttonElement = document.querySelector("#play");
 const gridElement = document.querySelector("#grid");
+const resultElement = document.querySelector("#result");
 let bombsArray = [];
 let gridSize = 0;
+let counter = 0;
 
 
 // al click del bottone genero una griglia di n = gridSize celle in base alla difficoltà
@@ -93,12 +95,22 @@ function gridGenerator(number) {
         // al click del quadrato, se ho colpito una bomba il quadrato diventa viola, altrimenti scompare 
         squareElement.addEventListener('click', function() {
 
+            // se clicco su una bomba il quadrato diventa viola e stampo il punteggio
             if (bombsArray.includes(Number(this.innerText)) == true) {
                 this.classList.add("bomb");
-                console.log("bomba presa")
+                console.log("bomba presa");
+                resultElement.innerText = "Hai calpestato una mina! Hai ottenuto un punteggio di " + counter;
+            // altrimenti cancello quadrato e vado avanti
             } else {
                 this.classList.add("active");
                 console.log(this.innerText);
+                counter ++;
+                console.log("Counter: " + counter);
+
+                // se ho cliccato tutti i quadrati che non sono bombe, gioco vinto e stampo punteggio
+                if (counter == gridSize - 16) {
+                    resultElement.innerText = "Hai Vinto! Hai ottenuto un punteggio di " + (counter);
+                }
             }
             
         })
