@@ -58,9 +58,6 @@ buttonElement.addEventListener('click', function() {
             gridElement.classList.remove("w-900");
             gridElement.classList.add("w-1000");
         }
-    
-    bombsArray = randomNumbersArray(gridSize);
-    console.log("Lista delle posizioni delle bombe " + bombsArray);
         
     gridGenerator(gridSize);
     console.log("grandezza della griglia " + gridSize);
@@ -74,7 +71,8 @@ buttonElement.addEventListener('click', function() {
 // creo funzione che genera un numero diverso di caselle in base alla difficoltà scelta dall'utente
 function gridGenerator(number) {
 
-    
+    bombsArray = randomNumbersArray(gridSize);
+    console.log("Lista delle posizioni delle bombe " + bombsArray);
 
     for (let i = 0; i < number; i++) {
         const squareElement = document.createElement("div");
@@ -95,15 +93,12 @@ function gridGenerator(number) {
         // al click del quadrato, se ho colpito una bomba il quadrato diventa viola, altrimenti scompare 
         squareElement.addEventListener('click', function() {
 
-            
-            console.log("bombsArray: " + bombsArray);
-            if (bombsArray.includes(this.innerText == true)) {
+            if (bombsArray.includes(Number(this.innerText)) == true) {
                 this.classList.add("bomb");
                 console.log("bomba presa")
             } else {
                 this.classList.add("active");
                 console.log(this.innerText);
-
             }
             
         })
