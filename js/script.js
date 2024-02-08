@@ -17,67 +17,24 @@ Quando si clicca su una bomba e finisce la partita, il software scopre tutte le 
 // inizializzo elementi HTML
 const buttonElement = document.querySelector("#play");
 const gridElement = document.querySelector("#grid");
+let bombsArray = [];
 let gridSize = 0;
 
-// creo funzione che genera un numero diverso di caselle in base alla difficoltà scelta dall'utente
-function gridGenerator(number) {
-    for (let i = 0; i < number; i++) {
-        const squareElement = document.createElement("div");
-        squareElement.classList.add("square");
 
-        // in base alla grandezza della griglia cambio la grandezza degli square
-        if (number == 49) {
-            squareElement.classList.add("square-7");
-        } else if (number == 81) {
-            squareElement.classList.add("square-9");
-        } else if (number == 100) {
-            squareElement.classList.add("square-10");
-        }
-
-        // all'interno di ogni square aggiungo il numero di quello square
-        squareElement.innerText = i + 1;
-
-        // al click il quadrato cambia colore, cliccando di nuovo torna del colore originale
-        squareElement.addEventListener('click', function() {
-
-            this.classList.add("active");
-            console.log(this.innerText);
-        })
-
-        // aggiungo lo square alla griglia
-        gridElement.append(squareElement);
-    }
-    return gridElement;
-}
-
-
-
-// creo funzione che genera un array di arrayLength numeri casuali da 1 a 16 tutti diversi tra loro
-function randomNumbersArray(max) {
-    const numbersArray = [];
-
-    while (numbersArray.length < 16) {
-        const RandomNumber = Math.floor(Math.random() * max + 1);
-         if (! numbersArray.includes(RandomNumber)) {
-            numbersArray.push(RandomNumber);
-         }
-    }
-    return numbersArray;
-}
-
-
-// al click del bottone genero una griglia N celle in base alla difficoltà
+// al click del bottone genero una griglia di n = gridSize celle in base alla difficoltà
 buttonElement.addEventListener('click', function() {
 
     console.clear();
     gridElement.innerHTML = "";
     const selectElement = document.querySelector("#select");
 
+    // se non è stata scelta la difficoltà stampo avviso
     if (selectElement.value == 0) {
         const addDifficulty = document.createElement("h2");
         addDifficulty.innerHTML = "Scegli la Difficoltà per giocare"
         gridElement.append(addDifficulty);
 
+    // altrimenti proseguo
     } else {
 
         // livello facile
@@ -102,9 +59,71 @@ buttonElement.addEventListener('click', function() {
             gridElement.classList.add("w-1000");
         }
     
-        gridGenerator(gridSize);
-        console.log(randomNumbersArray(gridSize));
+    bombsArray = randomNumbersArray(gridSize);
+    console.log("Lista delle posizioni delle bombe " + bombsArray);
+        
+    gridGenerator(gridSize);
+    console.log("grandezza della griglia " + gridSize);
     }
-
-
 })
+
+
+
+// LISTA FUNZIONI
+
+// creo funzione che genera un numero diverso di caselle in base alla difficoltà scelta dall'utente
+function gridGenerator(number) {
+
+    
+
+    for (let i = 0; i < number; i++) {
+        const squareElement = document.createElement("div");
+        squareElement.classList.add("square");
+
+        // in base alla grandezza della griglia cambio la grandezza degli square
+        if (number == 49) {
+            squareElement.classList.add("square-7");
+        } else if (number == 81) {
+            squareElement.classList.add("square-9");
+        } else if (number == 100) {
+            squareElement.classList.add("square-10");
+        }
+
+        // all'interno di ogni square aggiungo il numero di quello square
+        squareElement.innerText = i + 1;
+
+        // al click del quadrato, se ho colpito una bomba il quadrato diventa viola, altrimenti scompare 
+        squareElement.addEventListener('click', function() {
+
+            
+            console.log("bombsArray: " + bombsArray);
+            if (bombsArray.includes(this.innerText == true)) {
+                this.classList.add("bomb");
+                console.log("bomba presa")
+            } else {
+                this.classList.add("active");
+                console.log(this.innerText);
+
+            }
+            
+        })
+
+        // aggiungo lo square alla griglia
+        gridElement.append(squareElement);
+    }
+    return gridElement;
+}
+
+
+// creo funzione che genera un array di 16 numeri casuali da 1 a max tutti diversi tra loro
+function randomNumbersArray(max) {
+    const numbersArray = [];
+
+    while (numbersArray.length < 16) {
+        const RandomNumber = Math.floor(Math.random() * max + 1);
+         if (! numbersArray.includes(RandomNumber)) {
+            numbersArray.push(RandomNumber);
+         }
+    }
+    return numbersArray;
+}

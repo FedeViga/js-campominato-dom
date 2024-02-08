@@ -137,6 +137,10 @@ h2 {
     background-color:#030637;
 }
 
+.bomb {
+    background-color: #3C0753;
+}
+
 .active:hover {
     background-color: #030637;
 }
