@@ -18,9 +18,14 @@ Quando si clicca su una bomba e finisce la partita, il software scopre tutte le 
 const buttonElement = document.querySelector("#play");
 const gridElement = document.querySelector("#grid");
 const resultElement = document.querySelector("#result");
+const recordElement = document.querySelector("#record");
 let bombsArray = [];
 let gridSize = 0;
-let counter = 0;
+let counter;
+let highScore = 0;
+let gameOver;
+
+recordElement.innerHTML ="Record: <br>" + highScore;
 
 
 // al click del bottone genero una griglia di n = gridSize celle in base alla difficoltà
@@ -28,6 +33,9 @@ buttonElement.addEventListener('click', function() {
 
     console.clear();
     gridElement.innerHTML = "";
+    resultElement.innerText = "";
+    counter = 0;
+    gameOver = false;
     const selectElement = document.querySelector("#select");
 
     // se non è stata scelta la difficoltà stampo avviso
@@ -61,8 +69,8 @@ buttonElement.addEventListener('click', function() {
             gridElement.classList.add("w-1000");
         }
         
-    gridGenerator(gridSize);
-    console.log("grandezza della griglia " + gridSize);
+        gridGenerator(gridSize);
+        console.log("grandezza della griglia " + gridSize);
     }
 })
 
@@ -74,7 +82,7 @@ buttonElement.addEventListener('click', function() {
 function gridGenerator(number) {
 
     bombsArray = randomNumbersArray(gridSize);
-    console.log("Lista delle posizioni delle bombe " + bombsArray);
+    console.log("posizioni delle bombe: ", bombsArray);
 
     for (let i = 0; i < number; i++) {
         const squareElement = document.createElement("div");
@@ -92,33 +100,51 @@ function gridGenerator(number) {
         // all'interno di ogni square aggiungo il numero di quello square
         squareElement.innerText = i + 1;
 
-        // al click del quadrato, se ho colpito una bomba il quadrato diventa viola, altrimenti scompare 
-        squareElement.addEventListener('click', function() {
-
-            // se clicco su una bomba il quadrato diventa viola e stampo il punteggio
-            if (bombsArray.includes(Number(this.innerText)) == true) {
-                this.classList.add("bomb");
-                console.log("bomba presa");
-                resultElement.innerText = "Hai calpestato una mina! Hai ottenuto un punteggio di " + counter;
-            // altrimenti cancello quadrato e vado avanti
-            } else {
-                this.classList.add("active");
-                console.log(this.innerText);
-                counter ++;
-                console.log("Counter: " + counter);
-
-                // se ho cliccato tutti i quadrati che non sono bombe, gioco vinto e stampo punteggio
-                if (counter == gridSize - 16) {
-                    resultElement.innerText = "Hai Vinto! Hai ottenuto un punteggio di " + (counter);
-                }
-            }
-            
-        })
+        // richiamo la funzione che colora i quadrati
+        squareElement.addEventListener('click', changeSquareColor);
 
         // aggiungo lo square alla griglia
         gridElement.append(squareElement);
     }
     return gridElement;
+}
+
+
+// funzione che colora o fa scomparire i quadrati
+function changeSquareColor() {
+
+    if (! gameOver) {
+
+        // se clicco su una bomba il quadrato diventa viola e stampo il punteggio
+        if (bombsArray.includes(Number(this.innerText))) {
+            this.classList.add("bomb");
+            console.log("bomba presa");
+            gameOver = true
+            resultElement.innerHTML = "Hai calpestato una mina! Fine del gioco :( <br> Hai ottenuto un punteggio di " + counter;
+        // altrimenti cancello quadrato e vado avanti
+        } else {
+            this.classList.add("active");
+            console.log(this.innerText);
+            counter ++;
+            console.log("Counter: " + counter);
+    
+            // se ho cliccato tutti i quadrati che non sono bombe, gioco vinto e stampo punteggio
+            if (counter == gridSize - 16) {
+                resultElement.innerHTML = "Hai Vinto! Hai ottenuto un punteggio di " + (counter);
+                gameOver = true;
+            }
+        }
+    }
+
+    if (gameOver) {
+
+        if (counter > highScore) {
+            highScore = counter;
+            recordElement.innerHTML = "Record:<br>" + highScore;
+        }
+        window.scrollTo(0, 0);
+    }
+
 }
 
 

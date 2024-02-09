@@ -38,6 +38,18 @@ header {
     background-color:#720455;
 }
 
+#record {
+    background-color: #030637;
+    color: #720455;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+    width: 150px;
+    height: 100px;
+    border-radius: 20px;
+    padding: 10px;
+}
+
 h1 {
     color: #030637;
     font-size: 3em;
@@ -81,8 +93,9 @@ h1 {
 /* main */
 h2 {
     color: #720455;
-    text-align: center;
     margin-bottom: 48px;
+    text-align: center;
+    font-weight: bold;
 }
 
 #grid {
@@ -118,6 +131,7 @@ h2 {
     font-size: 1.2em;
     font-weight: 600;
 
+    transition: background-color .2s ease;
     user-select: none;
 }
 
@@ -137,6 +151,7 @@ h2 {
 
 .active {
     background-color:#030637;
+    pointer-events: none;
 }
 
 .bomb {
