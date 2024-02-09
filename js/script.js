@@ -14,7 +14,7 @@ BONUS 2
 Quando si clicca su una bomba e finisce la partita, il software scopre tutte le bombe nascoste.
 */
 
-// inizializzo elementi HTML
+// inizializzo elementi HTML e variabili
 const buttonElement = document.querySelector("#play");
 const gridElement = document.querySelector("#grid");
 const resultElement = document.querySelector("#result");
@@ -25,6 +25,7 @@ let counter;
 let highScore = 0;
 let gameOver;
 
+// setto il record a 0
 recordElement.innerHTML ="Record: <br>" + highScore;
 
 
@@ -69,8 +70,8 @@ buttonElement.addEventListener('click', function() {
             gridElement.classList.add("w-1000");
         }
         
+        // invoco funzione che genera la griglia
         gridGenerator(gridSize);
-        console.log("grandezza della griglia " + gridSize);
     }
 })
 
@@ -82,7 +83,6 @@ buttonElement.addEventListener('click', function() {
 function gridGenerator(number) {
 
     bombsArray = randomNumbersArray(gridSize);
-    console.log("posizioni delle bombe: ", bombsArray);
 
     for (let i = 0; i < number; i++) {
         const squareElement = document.createElement("div");
@@ -113,20 +113,18 @@ function gridGenerator(number) {
 // funzione che colora o fa scomparire i quadrati
 function changeSquareColor() {
 
+    // se l'utente non ha ancora perso
     if (! gameOver) {
 
         // se clicco su una bomba il quadrato diventa viola e stampo il punteggio
         if (bombsArray.includes(Number(this.innerText))) {
             this.classList.add("bomb");
-            console.log("bomba presa");
             gameOver = true
             resultElement.innerHTML = "Hai calpestato una mina! Fine del gioco :( <br> Hai ottenuto un punteggio di " + counter;
-        // altrimenti cancello quadrato e vado avanti
+        // altrimenti cancello il quadrato e vado avanti
         } else {
             this.classList.add("active");
-            console.log(this.innerText);
             counter ++;
-            console.log("Counter: " + counter);
     
             // se ho cliccato tutti i quadrati che non sono bombe, gioco vinto e stampo punteggio
             if (counter == gridSize - 16) {
@@ -136,8 +134,19 @@ function changeSquareColor() {
         }
     }
 
+    // se l'utente ha perso
     if (gameOver) {
 
+        // coloro di viola le bombe e faccio scomparire altri square
+        const squareList = gridElement.querySelectorAll(".square");
+        for (let i = 0; i < squareList.length; i++) {
+            if (bombsArray.includes(Number(squareList[i].innerText))) {
+                squareList[i].classList.add("bomb");
+            } else {
+                squareList[i].classList.add("active");
+            }
+        }
+        // se è stato battuto il record lo aggiorno
         if (counter > highScore) {
             highScore = counter;
             recordElement.innerHTML = "Record:<br>" + highScore;
